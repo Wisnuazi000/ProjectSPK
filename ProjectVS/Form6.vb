@@ -6,7 +6,7 @@ Public Class Form6
         Try
             Call OpenConn()
             If conn.State <> ConnectionState.Open Then
-                MessageBox.Show("Gagal membuka koneksi database.", "Error")
+                MessageBox.Show("Gagal membuka koneksi database", "Error")
                 Return
             End If
 
