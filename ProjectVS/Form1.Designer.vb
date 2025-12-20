@@ -81,6 +81,7 @@ Partial Class FormLogin
         Me.Controls.Add(Me.txtPassword)
         Me.Controls.Add(Me.txtUsername)
         Me.Name = "FormLogin"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form Login"
         Me.ResumeLayout(False)
         Me.PerformLayout()

@@ -307,6 +307,7 @@ Partial Class Form3
         Me.Controls.Add(Me.txtNama)
         Me.Controls.Add(Me.txtNik)
         Me.Name = "Form3"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form Data Karyawan"
         CType(Me.dgvKaryawan, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)

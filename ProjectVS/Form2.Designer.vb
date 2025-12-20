@@ -24,16 +24,18 @@ Partial Class Form2
     Private Sub InitializeComponent()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.DataKaryawanToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DataKriteriaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NilaiKaryawanToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RrankingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnAdminHR = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnSuperAdvisor = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
         Me.MenuStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DataKaryawanToolStripMenuItem, Me.DataKriteriaToolStripMenuItem, Me.NilaiKaryawanToolStripMenuItem, Me.RrankingToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DataKaryawanToolStripMenuItem, Me.NilaiKaryawanToolStripMenuItem, Me.RrankingToolStripMenuItem, Me.ReportToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(800, 28)
@@ -46,14 +48,9 @@ Partial Class Form2
         Me.DataKaryawanToolStripMenuItem.Size = New System.Drawing.Size(123, 24)
         Me.DataKaryawanToolStripMenuItem.Text = "Data Karyawan"
         '
-        'DataKriteriaToolStripMenuItem
-        '
-        Me.DataKriteriaToolStripMenuItem.Name = "DataKriteriaToolStripMenuItem"
-        Me.DataKriteriaToolStripMenuItem.Size = New System.Drawing.Size(107, 24)
-        Me.DataKriteriaToolStripMenuItem.Text = "Data Kriteria"
-        '
         'NilaiKaryawanToolStripMenuItem
         '
+        Me.NilaiKaryawanToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnSuperAdvisor, Me.mnAdminHR})
         Me.NilaiKaryawanToolStripMenuItem.Name = "NilaiKaryawanToolStripMenuItem"
         Me.NilaiKaryawanToolStripMenuItem.Size = New System.Drawing.Size(122, 24)
         Me.NilaiKaryawanToolStripMenuItem.Text = "Nilai Karyawan"
@@ -61,8 +58,26 @@ Partial Class Form2
         'RrankingToolStripMenuItem
         '
         Me.RrankingToolStripMenuItem.Name = "RrankingToolStripMenuItem"
-        Me.RrankingToolStripMenuItem.Size = New System.Drawing.Size(81, 24)
-        Me.RrankingToolStripMenuItem.Text = "Rranking"
+        Me.RrankingToolStripMenuItem.Size = New System.Drawing.Size(76, 24)
+        Me.RrankingToolStripMenuItem.Text = "Ranking"
+        '
+        'mnAdminHR
+        '
+        Me.mnAdminHR.Name = "mnAdminHR"
+        Me.mnAdminHR.Size = New System.Drawing.Size(224, 26)
+        Me.mnAdminHR.Text = "Admin HR"
+        '
+        'mnSuperAdvisor
+        '
+        Me.mnSuperAdvisor.Name = "mnSuperAdvisor"
+        Me.mnSuperAdvisor.Size = New System.Drawing.Size(224, 26)
+        Me.mnSuperAdvisor.Text = "SuperAdvisor"
+        '
+        'ReportToolStripMenuItem
+        '
+        Me.ReportToolStripMenuItem.Name = "ReportToolStripMenuItem"
+        Me.ReportToolStripMenuItem.Size = New System.Drawing.Size(68, 24)
+        Me.ReportToolStripMenuItem.Text = "Report"
         '
         'Form2
         '
@@ -72,6 +87,7 @@ Partial Class Form2
         Me.Controls.Add(Me.MenuStrip1)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "Form2"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Menu Data Master"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
@@ -82,7 +98,9 @@ Partial Class Form2
 
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents DataKaryawanToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents DataKriteriaToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents NilaiKaryawanToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents RrankingToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents mnAdminHR As ToolStripMenuItem
+    Friend WithEvents mnSuperAdvisor As ToolStripMenuItem
+    Friend WithEvents ReportToolStripMenuItem As ToolStripMenuItem
 End Class

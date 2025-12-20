@@ -204,6 +204,7 @@ Partial Class Form4
         Me.Controls.Add(Me.txtKode)
         Me.Controls.Add(Me.txtId)
         Me.Name = "Form4"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form Data Kriteria"
         CType(Me.dgvKriteria, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)

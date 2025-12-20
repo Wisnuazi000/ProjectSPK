@@ -1,147 +1,184 @@
-﻿Imports System.Reflection.Emit
-Imports MySql.Data.MySqlClient
+﻿Imports MySql.Data.MySqlClient
 
 Public Class Form6
-    Sub TampilHasil()
-        Try
-            Call OpenConn()
-            If conn.State <> ConnectionState.Open Then
-                MessageBox.Show("Gagal membuka koneksi database", "Error")
-                Return
-            End If
 
-            Dim da As New MySqlDataAdapter(
-            "SELECT k.nama_karyawan, h.nilai_akhir, h.ranking
-             FROM hasil h
-             JOIN karyawan k ON h.id_karyawan = k.id_karyawan
-             ORDER BY h.ranking ASC", conn)
+    Dim conn As New MySqlConnection(
+        "server=localhost;user id=root;password=;database=spk_karyawan")
 
+    ' ================= FORM LOAD =================
+    Private Sub Form6_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        SetupDgvKriteria()
+        SetupDgvAwal()
+        SetupDgvNormalisasi()
+        SetupDgvHasil()
+
+        LoadKriteriaBobot()
+        LoadMatriksKeputusan()
+        LoadMatriksNormalisasi()
+        LoadHasilAkhir()
+    End Sub
+
+    ' =====================================================
+    ' HELPER ANTI-DBNULL
+    ' =====================================================
+    Function ToDoubleSafe(val As Object) As Double
+        If IsDBNull(val) OrElse val Is Nothing Then
+            Return 0
+        Else
+            Return CDbl(val)
+        End If
+    End Function
+
+    ' =====================================================
+    ' SETUP DATA GRID VIEW
+    ' =====================================================
+    Sub SetupDgvKriteria()
+        With dgvKriteria
+            .Columns.Clear()
+            .AllowUserToAddRows = False
+            .ReadOnly = True
+
+            .Columns.Add("colKode", "Kode")
+            .Columns.Add("colNama", "Nama Kriteria")
+            .Columns.Add("colBobot", "Bobot")
+            .Columns.Add("colTipe", "Tipe")
+        End With
+    End Sub
+
+    Sub SetupDgvAwal()
+        With dgvAwal
+            .Columns.Clear()
+            .AllowUserToAddRows = False
+            .ReadOnly = True
+
+            .Columns.Add("colNama", "Nama Karyawan")
+            .Columns.Add("colC1", "C1")
+            .Columns.Add("colC2", "C2")
+            .Columns.Add("colC3", "C3")
+            .Columns.Add("colC4", "C4")
+        End With
+    End Sub
+
+    Sub SetupDgvNormalisasi()
+        With dgvNormalisasi
+            .Columns.Clear()
+            .AllowUserToAddRows = False
+            .ReadOnly = True
+
+            .Columns.Add("colNama", "Nama Karyawan")
+            .Columns.Add("colC1", "C1")
+            .Columns.Add("colC2", "C2")
+            .Columns.Add("colC3", "C3")
+            .Columns.Add("colC4", "C4")
+        End With
+    End Sub
+
+    Sub SetupDgvHasil()
+        With dgvHasil
+            .Columns.Clear()
+            .AllowUserToAddRows = False
+            .ReadOnly = True
+
+            .Columns.Add("colNama", "Nama Karyawan")
+            .Columns.Add("colNilai", "Nilai Akhir")
+            .Columns.Add("colRank", "Ranking")
+        End With
+    End Sub
+
+    ' =====================================================
+    ' 1. DATA KRITERIA DAN BOBOT
+    ' =====================================================
+    Sub LoadKriteriaBobot()
+        dgvKriteria.Rows.Clear()
+
+        dgvKriteria.Rows.Add("C1", "Pencapaian Target", "40%", "Benefit")
+        dgvKriteria.Rows.Add("C2", "Proses Penjualan", "30%", "Benefit")
+        dgvKriteria.Rows.Add("C3", "Perilaku & Soft Skill", "20%", "Benefit")
+        dgvKriteria.Rows.Add("C4", "Disiplin & Kepatuhan", "10%", "Benefit")
+    End Sub
+
+    ' =====================================================
+    ' 2. MATRIKS KEPUTUSAN (NILAI AWAL)
+    ' =====================================================
+    Sub LoadMatriksKeputusan()
+        dgvAwal.Rows.Clear()
+
+        Dim sql As String = "
+        SELECT k.nama_karyawan,
+        COALESCE(AVG(CASE WHEN kr.kode_kriteria LIKE 'PT%' THEN n.nilai END),0) AS C1,
+        COALESCE(AVG(CASE WHEN kr.kode_kriteria LIKE 'PP%' THEN n.nilai END),0) AS C2,
+        COALESCE(AVG(CASE WHEN kr.kode_kriteria LIKE 'PS%' THEN n.nilai END),0) AS C3,
+        COALESCE(AVG(CASE WHEN kr.kode_kriteria LIKE 'DK%' THEN n.nilai END),0) AS C4
+        FROM nilai n
+        JOIN karyawan k ON n.id_karyawan = k.id_karyawan
+        JOIN kriteria kr ON n.id_kriteria = kr.id_kriteria
+        GROUP BY k.nama_karyawan
+        "
+
+        Using da As New MySqlDataAdapter(sql, conn)
             Dim dt As New DataTable
             da.Fill(dt)
-            dgvHasil.DataSource = dt
 
-            ' Tampilkan jumlah baris untuk debugging
-            'Label1.Text = "Jumlah hasil: " & dt.Rows.Count ' (Tambahkan Label1 di form jika perlu)
-
-        Catch ex As Exception
-            MessageBox.Show("Error saat menampilkan hasil: " & ex.Message, "Error")
-        Finally
-            If conn.State = ConnectionState.Open Then
-                conn.Close()
-            End If
-        End Try
+            For Each r As DataRow In dt.Rows
+                dgvAwal.Rows.Add(
+                    r("nama_karyawan"),
+                    Math.Round(ToDoubleSafe(r("C1")), 2),
+                    Math.Round(ToDoubleSafe(r("C2")), 2),
+                    Math.Round(ToDoubleSafe(r("C3")), 2),
+                    Math.Round(ToDoubleSafe(r("C4")), 2)
+                )
+            Next
+        End Using
     End Sub
 
-    Private Sub btnProses_Click(sender As Object, e As EventArgs) Handles btnProses.Click
-        Call OpenConn()
-
-
-        ' HAPUS HASIL LAMA
-        Dim cmdClear As New MySqlCommand("DELETE FROM hasil", conn)
-        cmdClear.ExecuteNonQuery()
-
-        ' 1. Ambil Kriteria
-        Dim dtKriteria As New DataTable
-        Dim daKriteria As New MySqlDataAdapter(
-        "SELECT id_kriteria, bobot, tipe FROM kriteria", conn)
-        daKriteria.Fill(dtKriteria)
-
-        ' 2. Ambil Nilai
-        Dim dtNilai As New DataTable
-        Dim daNilai As New MySqlDataAdapter(
-        "SELECT id_karyawan, id_kriteria, nilai FROM nilai", conn)
-        daNilai.Fill(dtNilai)
-
-        If dtNilai.Rows.Count = 0 Then
-            MessageBox.Show("Data nilai masih kosong!", "Peringatan")
-            conn.Close()
-            Exit Sub
-        End If
-
-        ' 3. Cari Max & Min
-        Dim maxNilai As New Dictionary(Of Integer, Double)
-        Dim minNilai As New Dictionary(Of Integer, Double)
-
-        For Each k As DataRow In dtKriteria.Rows
-            Dim idKriteria = k("id_kriteria")
-            Dim rows = dtNilai.Select("id_kriteria=" & idKriteria)
-
-            If rows.Length > 0 Then
-                maxNilai(idKriteria) = rows.Max(Function(r) CDbl(r("nilai")))
-                minNilai(idKriteria) = rows.Min(Function(r) CDbl(r("nilai")))
-            End If
-        Next
-
-        ' 4. Hitung Nilai Akhir
-        Dim hasil As New Dictionary(Of Integer, Double)
-
-        For Each r As DataRow In dtNilai.Rows
-            Dim idKaryawan = r("id_karyawan")
-            Dim idKriteria = r("id_kriteria")
-            Dim nilai = CDbl(r("nilai"))
-
-            Dim k = dtKriteria.Select("id_kriteria=" & idKriteria)(0)
-            Dim bobot = CDbl(k("bobot"))
-            Dim tipe = k("tipe").ToString()
-
-            Dim normalisasi As Double
-            If tipe = "benefit" Then
-                normalisasi = nilai / maxNilai(idKriteria)
-            Else
-                normalisasi = minNilai(idKriteria) / nilai
-            End If
-
-            If Not hasil.ContainsKey(idKaryawan) Then
-                hasil(idKaryawan) = 0
-            End If
-
-            hasil(idKaryawan) += normalisasi * bobot
-        Next
-
-        ' 5. Ranking + Simpan
-        Dim ranking = hasil.OrderByDescending(Function(x) x.Value).ToList()
-        Dim rank As Integer = 1
-
-        For Each h In ranking
-            Dim cmd As New MySqlCommand(
-            "INSERT INTO hasil (id_karyawan, nilai_akhir, ranking)
-             VALUES (@id, @nilai, @rank)", conn)
-
-            cmd.Parameters.AddWithValue("@id", h.Key)
-            cmd.Parameters.AddWithValue("@nilai", h.Value)
-            cmd.Parameters.AddWithValue("@rank", rank)
-            cmd.ExecuteNonQuery()
-            rank += 1
-        Next
-
-        conn.Close()
-
-        MessageBox.Show("Proses SAW berhasil", "Informasi")
-        TampilHasil()
-    End Sub
-
-
-    Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
-        dgvKriteria.DataSource = Nothing
-        dgvMatriks.DataSource = Nothing
-        dgvNormalisasi.DataSource = Nothing
-        dgvHasil.DataSource = Nothing
-
-        dgvKriteria.Rows.Clear()
-        dgvMatriks.Rows.Clear()
+    ' =====================================================
+    ' 3. MATRIKS NORMALISASI (SAW)
+    ' =====================================================
+    Sub LoadMatriksNormalisasi()
         dgvNormalisasi.Rows.Clear()
+        If dgvAwal.Rows.Count = 0 Then Exit Sub
+
+        Dim maxC1 As Double = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(1).Value))
+        Dim maxC2 As Double = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(2).Value))
+        Dim maxC3 As Double = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(3).Value))
+        Dim maxC4 As Double = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(4).Value))
+
+        For Each row As DataGridViewRow In dgvAwal.Rows
+            dgvNormalisasi.Rows.Add(
+                row.Cells(0).Value,
+                Math.Round(CDbl(row.Cells(1).Value) / maxC1, 3),
+                Math.Round(CDbl(row.Cells(2).Value) / maxC2, 3),
+                Math.Round(CDbl(row.Cells(3).Value) / maxC3, 3),
+                Math.Round(CDbl(row.Cells(4).Value) / maxC4, 3)
+            )
+        Next
+    End Sub
+
+    ' =====================================================
+    ' 4. HASIL AKHIR DAN RANKING
+    ' =====================================================
+    Sub LoadHasilAkhir()
         dgvHasil.Rows.Clear()
 
-        MessageBox.Show("Data berhasil dibersihkan", "Informasi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Dim sql As String = "
+        SELECT k.nama_karyawan, h.nilai_akhir, h.ranking
+        FROM hasil h
+        JOIN karyawan k ON h.id_karyawan = k.id_karyawan
+        ORDER BY h.ranking ASC
+        "
+
+        Using da As New MySqlDataAdapter(sql, conn)
+            Dim dt As New DataTable
+            da.Fill(dt)
+
+            For Each r As DataRow In dt.Rows
+                dgvHasil.Rows.Add(
+                    r("nama_karyawan"),
+                    Math.Round(ToDoubleSafe(r("nilai_akhir")), 0),
+                    r("ranking")
+                )
+            Next
+        End Using
     End Sub
 
-    Private Sub btnMenu_Click(sender As Object, e As EventArgs) Handles btnMenu.Click
-        Form2.Show()
-        Me.Close()
-    End Sub
-
-    Private Sub Form6_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        TampilHasil()
-    End Sub
 End Class
