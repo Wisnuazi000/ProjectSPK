@@ -90,7 +90,6 @@ Public Class Form6
     ' =====================================================
     Sub LoadKriteriaBobot()
         dgvKriteria.Rows.Clear()
-
         dgvKriteria.Rows.Add("C1", "Pencapaian Target", "40%", "Benefit")
         dgvKriteria.Rows.Add("C2", "Proses Penjualan", "30%", "Benefit")
         dgvKriteria.Rows.Add("C3", "Perilaku & Soft Skill", "20%", "Benefit")
@@ -128,7 +127,6 @@ Public Class Form6
                     Math.Round(ToDoubleSafe(r("C4")), 2)
                 )
             Next
-        End Using
     End Sub
 
     ' =====================================================
@@ -136,12 +134,11 @@ Public Class Form6
     ' =====================================================
     Sub LoadMatriksNormalisasi()
         dgvNormalisasi.Rows.Clear()
-        If dgvAwal.Rows.Count = 0 Then Exit Sub
 
-        Dim maxC1 As Double = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(1).Value))
-        Dim maxC2 As Double = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(2).Value))
-        Dim maxC3 As Double = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(3).Value))
-        Dim maxC4 As Double = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(4).Value))
+        Dim maxC1 = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(1).Value))
+        Dim maxC2 = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(2).Value))
+        Dim maxC3 = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(3).Value))
+        Dim maxC4 = dgvAwal.Rows.Cast(Of DataGridViewRow).Max(Function(r) CDbl(r.Cells(4).Value))
 
         For Each row As DataGridViewRow In dgvAwal.Rows
             dgvNormalisasi.Rows.Add(
@@ -178,7 +175,6 @@ Public Class Form6
                     r("ranking")
                 )
             Next
-        End Using
     End Sub
 
 End Class
