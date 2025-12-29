@@ -1,6 +1,8 @@
 ﻿Imports MySql.Data.MySqlClient
 
-Public Class Form5
+Public Class FormPenilaian
+
+
 
     ' ================= KONEKSI =================
     Dim conn As New MySqlConnection(
@@ -8,10 +10,42 @@ Public Class Form5
 
     ' ================= FORM LOAD =================
     Private Sub Form5_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If RoleUser = "SUPERADVISOR" Then
+            EnableIndikator123(True)
+            EnableIndikator4(False)
+
+        ElseIf RoleUser = "HR" Then
+            EnableIndikator123(False)
+            EnableIndikator4(True)
+
+        Else
+            MessageBox.Show("Anda tidak memiliki akses ke form ini")
+            Me.Close()
+        End If
+
+
         LoadKaryawan()
         LoadSkalaNilai()
         AturHakAkses()
+
+        ' ================= UI STYLE =================
+
+
+        ' Judul
+        lblTitle.Font = New Font("Segoe UI", 14, FontStyle.Bold)
+        lblTitle.ForeColor = Color.FromArgb(45, 62, 80)
+
+        ' Role label
+        lblRole.Text = "Login sebagai : " & RoleUser
+        lblRole.ForeColor = Color.Gray
+        lblRole.Font = New Font("Segoe UI", 9, FontStyle.Italic)
+
+
+
+        ' Tombol
+        StyleButtons()
     End Sub
+
 
     ' ================= LOAD KARYAWAN =================
     Sub LoadKaryawan()
@@ -26,18 +60,29 @@ Public Class Form5
         End Using
     End Sub
 
-    Private Sub cboKaryawan_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboKaryawan.SelectedIndexChanged
-        If cboKaryawan.SelectedIndex <> -1 Then
-            txtNik.Text = CType(cboKaryawan.SelectedItem, DataRowView)("nik").ToString()
-        End If
+    Private Sub cboKaryawan_SelectedIndexChanged(
+    sender As Object,
+    e As EventArgs
+) Handles cboKaryawan.SelectedIndexChanged
+
+        If cboKaryawan.SelectedIndex = -1 Then Exit Sub
+        If TypeOf cboKaryawan.SelectedValue Is DataRowView Then Exit Sub
+
+        Dim drv As DataRowView = CType(cboKaryawan.SelectedItem, DataRowView)
+        txtNik.Text = drv("nik").ToString()
+
+        LoadNilaiKaryawan(CInt(cboKaryawan.SelectedValue))
     End Sub
+
+
+
 
     ' ================= ROLE =================
     Sub AturHakAkses()
         If RoleUser = "SUPERADVISOR" Then
             EnableIndikator123(True)
             EnableIndikator4(False)
-        ElseIf RoleUser = "HR" Then
+        ElseIf RoleUser = "ADMIN HR" Then
             EnableIndikator123(False)
             EnableIndikator4(True)
         End If
@@ -251,7 +296,101 @@ Public Class Form5
     End Function
 
 
-    ' ================= SIMPAN =================
+
+
+    Sub ResetForm()
+        For Each ctrl As Control In pnlMain.Controls
+            ResetComboRecursive(ctrl)
+        Next
+    End Sub
+
+    Sub ResetComboRecursive(ctrl As Control)
+        If TypeOf ctrl Is ComboBox Then
+            CType(ctrl, ComboBox).SelectedIndex = -1
+        End If
+
+        For Each c As Control In ctrl.Controls
+            ResetComboRecursive(c)
+        Next
+    End Sub
+
+    Sub LoadNilaiKaryawan(idKaryawan As Integer)
+
+        ' Reset dulu semua combo
+        ResetCombo()
+
+        Dim cmd As New MySqlCommand(
+        "SELECT id_kriteria, nilai 
+         FROM nilai 
+         WHERE id_karyawan=@id", conn)
+
+        cmd.Parameters.AddWithValue("@id", idKaryawan)
+
+        conn.Open()
+        Dim rd = cmd.ExecuteReader()
+
+        While rd.Read()
+            Dim idKriteria = CInt(rd("id_kriteria"))
+            Dim nilai = CInt(rd("nilai"))
+
+            Select Case idKriteria
+            ' === PENCAPAIAN TARGET ===
+                Case 1 : SetCombo(cmbPt1, nilai)
+                Case 2 : SetCombo(cmbPt2, nilai)
+                Case 3 : SetCombo(cmbPt3, nilai)
+
+            ' === PROSES PENJUALAN ===
+                Case 4 : SetCombo(cmbPp1, nilai)
+                Case 5 : SetCombo(cmbPp2, nilai)
+                Case 6 : SetCombo(cmbPp3, nilai)
+                Case 7 : SetCombo(cmbPp4, nilai)
+
+            ' === PERILAKU & SOFT SKILL ===
+                Case 8 : SetCombo(cmbPs1, nilai)
+                Case 9 : SetCombo(cmbPs2, nilai)
+                Case 10 : SetCombo(cmbPs3, nilai)
+
+            ' === DISIPLIN & KEPATUHAN (HR) ===
+                Case 11 : SetCombo(cmbDk1, nilai)
+                Case 12 : SetCombo(cmbDk2, nilai)
+                Case 13 : SetCombo(cmbDk3, nilai)
+            End Select
+        End While
+
+        rd.Close()
+        conn.Close()
+    End Sub
+    Sub SetCombo(cmb As ComboBox, nilai As Integer)
+        For i As Integer = 0 To cmb.Items.Count - 1
+            If cmb.Items(i).Value = nilai Then
+                cmb.SelectedIndex = i
+                Exit Sub
+            End If
+        Next
+    End Sub
+
+    Sub ResetCombo()
+        For Each ctrl As Control In Me.Controls
+            If TypeOf ctrl Is ComboBox Then
+                CType(ctrl, ComboBox).SelectedIndex = -1
+            End If
+        Next
+    End Sub
+
+
+
+    ' ================= button =================
+
+
+    Private Sub btnMenu_Click_1(sender As Object, e As EventArgs) Handles btnMenu.Click
+        FormMenu.Show()
+        Me.Close()
+    End Sub
+
+    Private Sub btnEdit_Click(sender As Object, e As EventArgs)
+
+    End Sub
+
     Private Sub btnSimpan_Click(sender As Object, e As EventArgs) Handles btnSimpan.Click
         If cboKaryawan.SelectedIndex = -1 Then
             MessageBox.Show("Pilih karyawan terlebih dahulu")
@@ -261,14 +400,18 @@ Public Class Form5
         Try
             conn.Open()
 
+            ' ==================================================
+            ' SUPERADVISOR
+            ' ==================================================
             If RoleUser = "SUPERADVISOR" Then
+
                 Dim cmd As New MySqlCommand("
-                INSERT INTO nilai (id_karyawan,id_kriteria,nilai)
-                VALUES
-                (@id,1,@pt1),(@id,2,@pt2),(@id,3,@pt3),
-                (@id,4,@pp1),(@id,5,@pp2),(@id,6,@pp3),(@id,7,@pp4),
-                (@id,8,@ps1),(@id,9,@ps2),(@id,10,@ps3)
-                ON DUPLICATE KEY UPDATE nilai=VALUES(nilai)", conn)
+            INSERT INTO nilai (id_karyawan,id_kriteria,nilai)
+            VALUES
+            (@id,1,@pt1),(@id,2,@pt2),(@id,3,@pt3),
+            (@id,4,@pp1),(@id,5,@pp2),(@id,6,@pp3),(@id,7,@pp4),
+            (@id,8,@ps1),(@id,9,@ps2),(@id,10,@ps3)
+            ON DUPLICATE KEY UPDATE nilai=VALUES(nilai)", conn)
 
                 cmd.Parameters.AddWithValue("@id", cboKaryawan.SelectedValue)
                 cmd.Parameters.AddWithValue("@pt1", Nilai(cmbPt1))
@@ -285,41 +428,62 @@ Public Class Form5
 
                 MessageBox.Show("Nilai SuperAdvisor berhasil disimpan")
 
+                ' ==================================================
+                ' HR
+                ' ==================================================
             ElseIf RoleUser = "HR" Then
 
+                ' Cek nilai SuperAdvisor
                 If Not NilaiSuperAdvisorAda(cboKaryawan.SelectedValue) Then
                     MessageBox.Show("Nilai SuperAdvisor belum tersedia")
                     Exit Sub
                 End If
 
+                ' ================= SIMPAN C4 (DISIPLIN & KEPATUHAN) =================
+                Dim cmdNilai As New MySqlCommand("
+            INSERT INTO nilai (id_karyawan,id_kriteria,nilai)
+            VALUES
+            (@id,11,@dk1),
+            (@id,12,@dk2),
+            (@id,13,@dk3)
+            ON DUPLICATE KEY UPDATE nilai = VALUES(nilai)", conn)
+
+                cmdNilai.Parameters.AddWithValue("@id", cboKaryawan.SelectedValue)
+                cmdNilai.Parameters.AddWithValue("@dk1", Nilai(cmbDk1))
+                cmdNilai.Parameters.AddWithValue("@dk2", Nilai(cmbDk2))
+                cmdNilai.Parameters.AddWithValue("@dk3", Nilai(cmbDk3))
+                cmdNilai.ExecuteNonQuery()
+
+                ' ================= HITUNG NILAI AKHIR SAW =================
                 Dim nilaiAkhir As Double = HitungSAW()
 
                 Dim cmdHasil As New MySqlCommand("
-                INSERT INTO hasil (id_karyawan,nilai_akhir)
-                VALUES (@id,@nilai)
-                ON DUPLICATE KEY UPDATE nilai_akhir=@nilai", conn)
+            INSERT INTO hasil (id_karyawan,nilai_akhir)
+            VALUES (@id,@nilai)
+            ON DUPLICATE KEY UPDATE nilai_akhir=@nilai", conn)
 
                 cmdHasil.Parameters.AddWithValue("@id", cboKaryawan.SelectedValue)
                 cmdHasil.Parameters.AddWithValue("@nilai", nilaiAkhir)
                 cmdHasil.ExecuteNonQuery()
 
-                ' === HITUNG RANKING (AMAN) ===
+                ' ================= HITUNG RANKING =================
                 Dim dt As New DataTable
                 Dim da As New MySqlDataAdapter(
-    "SELECT id_hasil FROM hasil ORDER BY nilai_akhir DESC", conn)
+                "SELECT id_hasil FROM hasil ORDER BY nilai_akhir DESC", conn)
                 da.Fill(dt)
 
                 Dim rank As Integer = 1
                 For Each row As DataRow In dt.Rows
                     Dim cmdRank As New MySqlCommand(
-        "UPDATE hasil SET ranking=@rank WHERE id_hasil=@id", conn)
+                    "UPDATE hasil SET ranking=@rank WHERE id_hasil=@id", conn)
                     cmdRank.Parameters.AddWithValue("@rank", rank)
                     cmdRank.Parameters.AddWithValue("@id", row("id_hasil"))
                     cmdRank.ExecuteNonQuery()
                     rank += 1
                 Next
 
-                MessageBox.Show("Nilai akhir & ranking berhasil disimpan")
+                MessageBox.Show("Nilai HR, nilai akhir, dan ranking berhasil disimpan")
+
             End If
 
         Catch ex As Exception
@@ -328,10 +492,14 @@ Public Class Form5
             conn.Close()
         End Try
     End Sub
-    ' ================= HAPUS =================
+
+    Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
+        ResetForm()
+    End Sub
+
     Private Sub btnHapus_Click(sender As Object, e As EventArgs) Handles btnHapus.Click
         If MessageBox.Show("Hapus data penilaian?", "Konfirmasi",
-                           MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                   MessageBoxButtons.YesNo) = DialogResult.Yes Then
             Try
                 conn.Open()
                 Dim cmd As New MySqlCommand(
@@ -347,18 +515,18 @@ Public Class Form5
         End If
     End Sub
 
-    ' ================= CLEAR =================
-    Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
-        For Each c As Control In Me.Controls
-            If TypeOf c Is ComboBox Then CType(c, ComboBox).SelectedIndex = -1
-        Next
+    Sub StyleButtons()
+        btnSimpan.BackColor = Color.FromArgb(46, 204, 113)
+        btnSimpan.ForeColor = Color.White
+
+        btnClear.BackColor = Color.Gainsboro
+        btnClear.ForeColor = Color.White
+
+        btnHapus.BackColor = Color.FromArgb(231, 76, 60)
+        btnHapus.ForeColor = Color.White
+
+        btnMenu.BackColor = Color.FromArgb(52, 152, 219)
+        btnMenu.ForeColor = Color.Black
     End Sub
 
-    ' ================= MENU =================
-    Private Sub btnMenu_Click(sender As Object, e As EventArgs) Handles btnMenu.Click
-        Form2.Show()
-        Me.Close()
-    End Sub
-
-    Private Sub btnSimpan_Click_1(sender As Object, e As EventArgs) Handles btnSimpan.Click
 End Class
