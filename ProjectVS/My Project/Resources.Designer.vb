@@ -93,6 +93,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property logo() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("logo", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property pexels_binyaminmellish_106399() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("pexels-binyaminmellish-106399", resourceCulture)
@@ -106,6 +116,16 @@ Namespace My.Resources
         Friend ReadOnly Property pexels_michael_tuszynski_1134777_2157401() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("pexels-michael-tuszynski-1134777-2157401", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property TTD_Manager() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("TTD_Manager", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

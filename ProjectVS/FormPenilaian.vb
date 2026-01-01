@@ -292,7 +292,7 @@ Public Class FormPenilaian
         Dim nilaiSAW As Double =
         (0.4 * PT) + (0.3 * PP) + (0.2 * PS) + (0.1 * DK)
 
-        Return Math.Round(nilaiSAW * 1000, 2) ' skala 0–100
+        Return Math.Round(nilaiSAW * 100, 2) ' skala 0–100
     End Function
 
 
@@ -520,7 +520,7 @@ Public Class FormPenilaian
         btnSimpan.ForeColor = Color.White
 
         btnClear.BackColor = Color.Gainsboro
-        btnClear.ForeColor = Color.White
+        btnClear.ForeColor = Color.Black
 
         btnHapus.BackColor = Color.FromArgb(231, 76, 60)
         btnHapus.ForeColor = Color.White

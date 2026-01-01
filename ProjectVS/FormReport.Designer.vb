@@ -30,7 +30,8 @@ Partial Class FormReport
         Me.btnApprove = New System.Windows.Forms.Button()
         Me.btnReject = New System.Windows.Forms.Button()
         Me.btnMenu = New System.Windows.Forms.Button()
-        Me.btnExport = New System.Windows.Forms.Button()
+        Me.btnExportExcel = New System.Windows.Forms.Button()
+        Me.btnExportPDF = New System.Windows.Forms.Button()
         Me.grpHasil.SuspendLayout()
         CType(Me.dgvHasil, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -39,18 +40,18 @@ Partial Class FormReport
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(266, 24)
+        Me.Label1.Location = New System.Drawing.Point(163, 30)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(247, 25)
+        Me.Label1.Size = New System.Drawing.Size(463, 25)
         Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Approval Hasil Penilaian"
+        Me.Label1.Text = "Approval Dan Report Hasil Penilaian Karyawan"
         '
         'grpHasil
         '
         Me.grpHasil.Controls.Add(Me.dgvHasil)
         Me.grpHasil.Location = New System.Drawing.Point(12, 79)
         Me.grpHasil.Name = "grpHasil"
-        Me.grpHasil.Size = New System.Drawing.Size(757, 220)
+        Me.grpHasil.Size = New System.Drawing.Size(757, 459)
         Me.grpHasil.TabIndex = 56
         Me.grpHasil.TabStop = False
         Me.grpHasil.Text = "Hasil Akhir dan Ranking"
@@ -62,13 +63,13 @@ Partial Class FormReport
         Me.dgvHasil.Name = "dgvHasil"
         Me.dgvHasil.RowHeadersWidth = 51
         Me.dgvHasil.RowTemplate.Height = 24
-        Me.dgvHasil.Size = New System.Drawing.Size(705, 161)
+        Me.dgvHasil.Size = New System.Drawing.Size(705, 404)
         Me.dgvHasil.TabIndex = 0
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(23, 326)
+        Me.Label2.Location = New System.Drawing.Point(55, 557)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(59, 16)
         Me.Label2.TabIndex = 57
@@ -76,14 +77,14 @@ Partial Class FormReport
         '
         'txtCatatan
         '
-        Me.txtCatatan.Location = New System.Drawing.Point(88, 323)
+        Me.txtCatatan.Location = New System.Drawing.Point(120, 554)
         Me.txtCatatan.Name = "txtCatatan"
         Me.txtCatatan.Size = New System.Drawing.Size(293, 22)
         Me.txtCatatan.TabIndex = 58
         '
         'btnApprove
         '
-        Me.btnApprove.Location = New System.Drawing.Point(26, 381)
+        Me.btnApprove.Location = New System.Drawing.Point(56, 596)
         Me.btnApprove.Name = "btnApprove"
         Me.btnApprove.Size = New System.Drawing.Size(75, 29)
         Me.btnApprove.TabIndex = 59
@@ -92,7 +93,7 @@ Partial Class FormReport
         '
         'btnReject
         '
-        Me.btnReject.Location = New System.Drawing.Point(148, 381)
+        Me.btnReject.Location = New System.Drawing.Point(168, 596)
         Me.btnReject.Name = "btnReject"
         Me.btnReject.Size = New System.Drawing.Size(75, 29)
         Me.btnReject.TabIndex = 60
@@ -101,28 +102,38 @@ Partial Class FormReport
         '
         'btnMenu
         '
-        Me.btnMenu.Location = New System.Drawing.Point(475, 381)
+        Me.btnMenu.Location = New System.Drawing.Point(633, 596)
         Me.btnMenu.Name = "btnMenu"
         Me.btnMenu.Size = New System.Drawing.Size(75, 29)
         Me.btnMenu.TabIndex = 49
         Me.btnMenu.Text = "Menu"
         Me.btnMenu.UseVisualStyleBackColor = True
         '
-        'btnExport
+        'btnExportExcel
         '
-        Me.btnExport.Location = New System.Drawing.Point(270, 381)
-        Me.btnExport.Name = "btnExport"
-        Me.btnExport.Size = New System.Drawing.Size(117, 29)
-        Me.btnExport.TabIndex = 61
-        Me.btnExport.Text = "Export Report"
-        Me.btnExport.UseVisualStyleBackColor = True
+        Me.btnExportExcel.Location = New System.Drawing.Point(280, 596)
+        Me.btnExportExcel.Name = "btnExportExcel"
+        Me.btnExportExcel.Size = New System.Drawing.Size(117, 29)
+        Me.btnExportExcel.TabIndex = 61
+        Me.btnExportExcel.Text = "Export Excel"
+        Me.btnExportExcel.UseVisualStyleBackColor = True
+        '
+        'btnExportPDF
+        '
+        Me.btnExportPDF.Location = New System.Drawing.Point(434, 596)
+        Me.btnExportPDF.Name = "btnExportPDF"
+        Me.btnExportPDF.Size = New System.Drawing.Size(117, 29)
+        Me.btnExportPDF.TabIndex = 62
+        Me.btnExportPDF.Text = "Export PDF"
+        Me.btnExportPDF.UseVisualStyleBackColor = True
         '
         'FormReport
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(800, 450)
-        Me.Controls.Add(Me.btnExport)
+        Me.ClientSize = New System.Drawing.Size(800, 652)
+        Me.Controls.Add(Me.btnExportPDF)
+        Me.Controls.Add(Me.btnExportExcel)
         Me.Controls.Add(Me.btnMenu)
         Me.Controls.Add(Me.btnReject)
         Me.Controls.Add(Me.btnApprove)
@@ -132,7 +143,7 @@ Partial Class FormReport
         Me.Controls.Add(Me.Label1)
         Me.Name = "FormReport"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "FormReport"
+        Me.Text = "Form Approval & Report"
         Me.grpHasil.ResumeLayout(False)
         CType(Me.dgvHasil, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -148,5 +159,6 @@ Partial Class FormReport
     Friend WithEvents btnApprove As Button
     Friend WithEvents btnReject As Button
     Friend WithEvents btnMenu As Button
-    Friend WithEvents btnExport As Button
+    Friend WithEvents btnExportExcel As Button
+    Friend WithEvents btnExportPDF As Button
 End Class

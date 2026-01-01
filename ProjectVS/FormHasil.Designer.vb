@@ -24,6 +24,8 @@ Partial Class FormHasil
     Private Sub InitializeComponent()
         Me.pnlMain = New System.Windows.Forms.Panel()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.btnHapus = New System.Windows.Forms.Button()
+        Me.btnClear = New System.Windows.Forms.Button()
         Me.btnMenu = New System.Windows.Forms.Button()
         Me.grpHasil = New System.Windows.Forms.GroupBox()
         Me.dgvHasil = New System.Windows.Forms.DataGridView()
@@ -58,17 +60,37 @@ Partial Class FormHasil
         Me.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlMain.Location = New System.Drawing.Point(0, 0)
         Me.pnlMain.Name = "pnlMain"
-        Me.pnlMain.Size = New System.Drawing.Size(1473, 569)
+        Me.pnlMain.Size = New System.Drawing.Size(1473, 739)
         Me.pnlMain.TabIndex = 52
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.btnHapus)
+        Me.Panel1.Controls.Add(Me.btnClear)
         Me.Panel1.Controls.Add(Me.btnMenu)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel1.Location = New System.Drawing.Point(0, 500)
+        Me.Panel1.Location = New System.Drawing.Point(0, 670)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(1473, 69)
         Me.Panel1.TabIndex = 56
+        '
+        'btnHapus
+        '
+        Me.btnHapus.Location = New System.Drawing.Point(1028, 17)
+        Me.btnHapus.Name = "btnHapus"
+        Me.btnHapus.Size = New System.Drawing.Size(171, 40)
+        Me.btnHapus.TabIndex = 63
+        Me.btnHapus.Text = "Hapus Penilaian terpilih"
+        Me.btnHapus.UseVisualStyleBackColor = True
+        '
+        'btnClear
+        '
+        Me.btnClear.Location = New System.Drawing.Point(1214, 17)
+        Me.btnClear.Name = "btnClear"
+        Me.btnClear.Size = New System.Drawing.Size(121, 40)
+        Me.btnClear.TabIndex = 62
+        Me.btnClear.Text = "Clear Penilaian"
+        Me.btnClear.UseVisualStyleBackColor = True
         '
         'btnMenu
         '
@@ -82,9 +104,9 @@ Partial Class FormHasil
         'grpHasil
         '
         Me.grpHasil.Controls.Add(Me.dgvHasil)
-        Me.grpHasil.Location = New System.Drawing.Point(745, 274)
+        Me.grpHasil.Location = New System.Drawing.Point(745, 343)
         Me.grpHasil.Name = "grpHasil"
-        Me.grpHasil.Size = New System.Drawing.Size(688, 220)
+        Me.grpHasil.Size = New System.Drawing.Size(688, 321)
         Me.grpHasil.TabIndex = 55
         Me.grpHasil.TabStop = False
         Me.grpHasil.Text = "Hasil Akhir dan Ranking"
@@ -96,7 +118,7 @@ Partial Class FormHasil
         Me.dgvHasil.Name = "dgvHasil"
         Me.dgvHasil.RowHeadersWidth = 51
         Me.dgvHasil.RowTemplate.Height = 24
-        Me.dgvHasil.Size = New System.Drawing.Size(632, 161)
+        Me.dgvHasil.Size = New System.Drawing.Size(632, 282)
         Me.dgvHasil.TabIndex = 0
         '
         'grpMatriks
@@ -104,10 +126,10 @@ Partial Class FormHasil
         Me.grpMatriks.Controls.Add(Me.dgvAwal)
         Me.grpMatriks.Location = New System.Drawing.Point(745, 52)
         Me.grpMatriks.Name = "grpMatriks"
-        Me.grpMatriks.Size = New System.Drawing.Size(688, 192)
+        Me.grpMatriks.Size = New System.Drawing.Size(688, 270)
         Me.grpMatriks.TabIndex = 53
         Me.grpMatriks.TabStop = False
-        Me.grpMatriks.Text = "Matiks Keputusan ( Nilai Awal )"
+        Me.grpMatriks.Text = "Matriks Keputusan (Nilai Rata-rata Sub Kriteria)"
         '
         'dgvAwal
         '
@@ -116,15 +138,15 @@ Partial Class FormHasil
         Me.dgvAwal.Name = "dgvAwal"
         Me.dgvAwal.RowHeadersWidth = 51
         Me.dgvAwal.RowTemplate.Height = 24
-        Me.dgvAwal.Size = New System.Drawing.Size(632, 137)
+        Me.dgvAwal.Size = New System.Drawing.Size(632, 232)
         Me.dgvAwal.TabIndex = 0
         '
         'grpNormalisasi
         '
         Me.grpNormalisasi.Controls.Add(Me.dgvNormalisasi)
-        Me.grpNormalisasi.Location = New System.Drawing.Point(24, 274)
+        Me.grpNormalisasi.Location = New System.Drawing.Point(24, 343)
         Me.grpNormalisasi.Name = "grpNormalisasi"
-        Me.grpNormalisasi.Size = New System.Drawing.Size(688, 220)
+        Me.grpNormalisasi.Size = New System.Drawing.Size(688, 321)
         Me.grpNormalisasi.TabIndex = 54
         Me.grpNormalisasi.TabStop = False
         Me.grpNormalisasi.Text = "Matriks Normalisasi"
@@ -136,7 +158,7 @@ Partial Class FormHasil
         Me.dgvNormalisasi.Name = "dgvNormalisasi"
         Me.dgvNormalisasi.RowHeadersWidth = 51
         Me.dgvNormalisasi.RowTemplate.Height = 24
-        Me.dgvNormalisasi.Size = New System.Drawing.Size(632, 162)
+        Me.dgvNormalisasi.Size = New System.Drawing.Size(632, 283)
         Me.dgvNormalisasi.TabIndex = 0
         '
         'grpKriteria
@@ -144,7 +166,7 @@ Partial Class FormHasil
         Me.grpKriteria.Controls.Add(Me.dgvKriteria)
         Me.grpKriteria.Location = New System.Drawing.Point(24, 52)
         Me.grpKriteria.Name = "grpKriteria"
-        Me.grpKriteria.Size = New System.Drawing.Size(688, 192)
+        Me.grpKriteria.Size = New System.Drawing.Size(688, 270)
         Me.grpKriteria.TabIndex = 52
         Me.grpKriteria.TabStop = False
         Me.grpKriteria.Text = "Data Kriteria dan Bobot"
@@ -156,18 +178,18 @@ Partial Class FormHasil
         Me.dgvKriteria.Name = "dgvKriteria"
         Me.dgvKriteria.RowHeadersWidth = 51
         Me.dgvKriteria.RowTemplate.Height = 24
-        Me.dgvKriteria.Size = New System.Drawing.Size(632, 137)
+        Me.dgvKriteria.Size = New System.Drawing.Size(632, 232)
         Me.dgvKriteria.TabIndex = 0
         '
-        'Form6
+        'FormHasil
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1473, 569)
+        Me.ClientSize = New System.Drawing.Size(1473, 739)
         Me.Controls.Add(Me.pnlMain)
-        Me.Name = "Form6"
+        Me.Name = "FormHasil"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Form6"
+        Me.Text = "Form Data Hasil"
         Me.pnlMain.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         Me.grpHasil.ResumeLayout(False)
@@ -193,4 +215,6 @@ Partial Class FormHasil
     Friend WithEvents grpKriteria As GroupBox
     Friend WithEvents dgvKriteria As DataGridView
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
+    Friend WithEvents btnClear As Button
+    Friend WithEvents btnHapus As Button
 End Class

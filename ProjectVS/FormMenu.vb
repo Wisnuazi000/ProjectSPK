@@ -54,6 +54,7 @@
     End Sub
 
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        lblUser.Text = $"Login sebagai: {Username} ({RoleUser})"
 
     End Sub
 
@@ -65,5 +66,25 @@
 
         FormReport.Show()
         Me.Hide()
+    End Sub
+
+    Private Sub LogoutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogoutToolStripMenuItem.Click
+        If MessageBox.Show(
+        "Apakah Anda yakin ingin logout?",
+        "Konfirmasi Logout",
+        MessageBoxButtons.YesNo,
+        MessageBoxIcon.Question) = DialogResult.Yes Then
+
+            ' === RESET SESSION USER ===
+            UserID = 0
+            Username = ""
+            RoleUser = ""
+
+            ' === KEMBALI KE LOGIN ===
+            FormLogin.Show()
+
+            ' Tutup menu
+            Me.Close()
+        End If
     End Sub
 End Class

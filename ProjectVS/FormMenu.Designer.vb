@@ -29,13 +29,15 @@ Partial Class FormMenu
         Me.mnAdminHR = New System.Windows.Forms.ToolStripMenuItem()
         Me.RankingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LogoutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.lblUser = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
         Me.MenuStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DataKaryawanToolStripMenuItem, Me.NilaiKaryawanToolStripMenuItem, Me.RankingToolStripMenuItem, Me.ReportToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DataKaryawanToolStripMenuItem, Me.NilaiKaryawanToolStripMenuItem, Me.RankingToolStripMenuItem, Me.ReportToolStripMenuItem, Me.lblUser, Me.LogoutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(783, 28)
@@ -79,7 +81,19 @@ Partial Class FormMenu
         Me.ReportToolStripMenuItem.Size = New System.Drawing.Size(68, 24)
         Me.ReportToolStripMenuItem.Text = "Report"
         '
-        'Form2
+        'LogoutToolStripMenuItem
+        '
+        Me.LogoutToolStripMenuItem.Name = "LogoutToolStripMenuItem"
+        Me.LogoutToolStripMenuItem.Size = New System.Drawing.Size(70, 24)
+        Me.LogoutToolStripMenuItem.Text = "Logout"
+        '
+        'lblUser
+        '
+        Me.lblUser.Name = "lblUser"
+        Me.lblUser.Size = New System.Drawing.Size(50, 24)
+        Me.lblUser.Text = "user"
+        '
+        'FormMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -88,7 +102,7 @@ Partial Class FormMenu
         Me.ClientSize = New System.Drawing.Size(783, 554)
         Me.Controls.Add(Me.MenuStrip1)
         Me.MainMenuStrip = Me.MenuStrip1
-        Me.Name = "Form2"
+        Me.Name = "FormMenu"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Menu Data Master"
         Me.MenuStrip1.ResumeLayout(False)
@@ -105,4 +119,6 @@ Partial Class FormMenu
     Friend WithEvents mnAdminHR As ToolStripMenuItem
     Friend WithEvents mnSuperAdvisor As ToolStripMenuItem
     Friend WithEvents ReportToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents LogoutToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents lblUser As ToolStripMenuItem
 End Class

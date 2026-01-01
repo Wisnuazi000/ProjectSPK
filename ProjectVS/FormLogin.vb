@@ -1,5 +1,6 @@
 ﻿Imports System.Data.SqlClient
 Imports MySql.Data.MySqlClient
+Imports OfficeOpenXml
 
 Public Class FormLogin
 
@@ -33,6 +34,8 @@ Public Class FormLogin
 
                 MessageBox.Show("Login berhasil sebagai " & RoleUser)
 
+                ' === INIT EPPLUS SEKALI SAJA ===
+
                 FormMenu.Show()
                 Me.Hide()
             Else
@@ -58,7 +61,17 @@ Public Class FormLogin
     End Sub
 
     Private Sub FormLogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial
         txtPassword.PasswordChar = "•"c
         piceye.Image = My.Resources.eye_close
+
+
     End Sub
+    Private Sub txtPassword_KeyDown(sender As Object, e As KeyEventArgs) Handles txtPassword.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            btnLogin.PerformClick()
+        End If
+    End Sub
+
 End Class

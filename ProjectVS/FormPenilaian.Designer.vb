@@ -517,7 +517,7 @@ Partial Class FormPenilaian
         Me.Controls.Add(Me.pnlHeader)
         Me.Name = "FormPenilaian"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Form5"
+        Me.Text = "Form Penilaian Karyawan"
         Me.pnlHeader.ResumeLayout(False)
         Me.pnlHeader.PerformLayout()
         Me.pnlFooter.ResumeLayout(False)
